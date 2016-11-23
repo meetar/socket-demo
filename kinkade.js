@@ -120,9 +120,16 @@ function exportCanvas() {
 
 function sendBlat() {
     var socket = io();
-    console.log('blatting')
-    canvas.toBlob(function(blob) {
-        socket.emit('blat', blob);
-    });
+    console.log('blatting');
+    // console.log(ctx.getImageData(0,0,canvas.width,canvas.height).data);
+    var imgArray = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+    // imgArray = imgArray.slice(0, 10);
+    // console.log(imgArray);
+
+    // Array.prototype.slice.call((new Uint8Array([0,1,2,3])))
+    imgArray = Array.prototype.slice.call((new Uint8Array(imgArray)));
+
+
+    socket.emit('blat', imgArray);
     return false;
 }

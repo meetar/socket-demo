@@ -20,25 +20,27 @@
       var canvas = document.getElementById('canvas');
       var ctx = canvas.getContext('2d');
 
-      socket.on('blat', function(blob){
-          // document.body.innerHTML += 'blob:' + blob;
+      socket.on('blat', function(data){
+          // console.log('data:', data.buffer)
 
+          var i = new ImageData(new Uint8ClampedArray(data.buffer),256,256);
+          ctx.putImageData(i,0,0);
           // console.log(blob);
-          var uint8Arr = new Uint8Array(blob);
-          var binary = '';
-          for (var i = 0; i < uint8Arr.length; i++) {
-              binary += String.fromCharCode(uint8Arr[i]);
-          }
-          var base64String = window.btoa(binary);
+          // var uint8Arr = new Uint8Array(blob);
+          // var binary = '';
+          // for (var i = 0; i < uint8Arr.length; i++) {
+          //     binary += String.fromCharCode(uint8Arr[i]);
+          // }
+          // var base64String = window.btoa(binary);
 
-          var img = new Image();
-          img.onload = function() {
-              canvas.width = img.width;
-              canvas.height = img.height;
-              var x = 0, y = 0;
-              ctx.drawImage(this, x, y);
-          }
-          img.src = 'data:image/png;base64,' + base64String;
+          // var img = new Image();
+          // img.onload = function() {
+          //     canvas.width = img.width;
+          //     canvas.height = img.height;
+          //     var x = 0, y = 0;
+          //     ctx.drawImage(data, x, y);
+          // }
+          // img.src = 'data:image/png;base64,' + base64String;
       });
 
 

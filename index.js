@@ -16,10 +16,12 @@ io.on('connection', function(socket){
         socket.emit('image', { buffer: buffer });
     });
   // socket.on('blat', function(msg){
-  socket.on('blat', function(msg){
+  socket.on('blat', function(data){
   	console.log('blat received:');
-  	// console.log(msg);
-    io.emit('blat', msg);
+  	// console.log(data);
+  	// var imgArray = new Uint8Array(data);
+  	// console.log(imgArray)
+    io.emit('blat', {buffer: data});
   });
 
 });

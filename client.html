@@ -20,9 +20,10 @@
       var canvas = document.getElementById('canvas');
       var ctx = canvas.getContext('2d');
 
-      socket.on('blat', function(data){
-          // console.log('data:', data.buffer)
+      socket.on('blatout', function(data){
+          console.log('data:', data)
 
+          // var i = new ImageData(new Uint8ClampedArray(data.buffer),256,256);
           var i = new ImageData(new Uint8ClampedArray(data.buffer),256,256);
           ctx.putImageData(i,0,0);
           // console.log(blob);

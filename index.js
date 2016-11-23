@@ -1,7 +1,10 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var ss = require('socket.io-stream');
+
 var fs = require("fs");
+
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
@@ -16,12 +19,19 @@ io.on('connection', function(socket){
         socket.emit('image', { buffer: buffer });
     });
   // socket.on('blat', function(msg){
-  socket.on('blat', function(data){
-  	console.log('blat received:');
-  	// console.log(data);
-  	// var imgArray = new Uint8Array(data);
-  	// console.log(imgArray)
-    io.emit('blat', {buffer: data});
+  // socket.on('blat', function(data){
+  // 	console.log('blat received:');
+  // 	// console.log(data);
+  // 	// var imgArray = new Uint8Array(data);
+  // 	// console.log(imgArray)
+  //   io.emit('blat', {buffer: data});
+  // });
+
+  ss(socket).on('blatin', function(stream, data) {
+  	console.log('blat stream received');
+  	// console.log(stream);
+	// stream.pipe(fs.createWriteStream('foo.txt'));
+  	io.emit('blatout', stream);
   });
 
 });

@@ -123,13 +123,30 @@ function sendBlat() {
     console.log('blatting');
     // console.log(ctx.getImageData(0,0,canvas.width,canvas.height).data);
     var imgArray = ctx.getImageData(0,0,canvas.width,canvas.height).data;
-    // imgArray = imgArray.slice(0, 10);
+    imgArray = imgArray.slice(0, 10);
     // console.log(imgArray);
 
     // Array.prototype.slice.call((new Uint8Array([0,1,2,3])))
-    imgArray = Array.prototype.slice.call((new Uint8Array(imgArray)));
+    // imgArray = Array.prototype.slice.call((new Uint8Array(imgArray)));
+    // imgArray = new Uint8Array(imgArray);
+    imgArray = new ArrayBuffer(imgArray);
 
 
-    socket.emit('blat', imgArray);
+
+    // var file = e.target.files[0];
+    var stream = ss.createStream();
+ 
+    // upload a file to the server. 
+    ss(socket).emit('blatin', stream);
+    stream.write(imgArray);
+    // ss.createBlobReadStream(file).pipe(stream);
+
+
+    // socket.emit('blatin', imgArray);
     return false;
 }
+
+
+
+
+

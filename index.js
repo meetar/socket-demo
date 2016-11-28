@@ -13,25 +13,53 @@ app.get(/.*/, function(req, res){
 });
 
 io.on('connection', function(socket){
+    // garfield = proof of life
     fs.readFile('g.jpg', function(err, buffer){
-    	// console.log('err?', err);
-    	// console.log('buffer?', buffer);
         socket.emit('image', { buffer: buffer });
     });
-  // socket.on('blat', function(msg){
-  // socket.on('blat', function(data){
-  // 	console.log('blat received:');
-  // 	// console.log(data);
-  // 	// var imgArray = new Uint8Array(data);
-  // 	// console.log(imgArray)
-  //   io.emit('blat', {buffer: data});
-  // });
 
   ss(socket).on('blatin', function(stream, data) {
   	console.log('blat stream received');
-  	// console.log(stream);
+
+ 	for(var i in io.sockets.connected) {
+      //don't send the stream back to the initiator
+      if (io.sockets.connected[i].id != socket.id)
+      {
+        var socketTo = io.sockets.connected[i]
+        var outgoingstream = ss.createStream();
+        // ss(socketTo).emit('blatout', 'test');
+        socketTo.send('blatout', 'test');
+        // ss(socketTo).emit('file', outgoingstream, data);
+        // stream.pipe(outgoingstream);
+      }
+    }
+
 	// stream.pipe(fs.createWriteStream('foo.txt'));
-  	io.emit('blatout', stream);
+  	// socket.pipe(socket.broadcast.emit('blatout', stream));
+  });
+
+  ss(socket).on('test', function(stream, data) {
+  	console.log('test stream received:', stream);
+
+    // ss(socket).emit('blatout', stream);
+
+ 	for(var i in io.sockets.connected) {
+      //don't send the stream back to the initiator
+      if (io.sockets.connected[i].id != socket.id)
+      {
+      	console.log(io.sockets.connected[i].id +'!='+ socket.id);
+        var socketTo = io.sockets.connected[i]
+        // socketTo.send('blatout', 'test');
+        socketTo.emit('blatout', 'test'); // < this works… but not sure it's what i want
+        // ss(socket).emit('blatout', stream);
+
+        // var outgoingstream = ss.createStream();
+        // // stream.pipe(outgoingstream);
+        // ss(socketTo).emit('testout', stream);
+
+      }
+    }
+
   });
 
 });

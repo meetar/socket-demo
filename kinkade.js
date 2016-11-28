@@ -147,6 +147,10 @@ function sendBlat() {
 }
 
 
-
-
-
+function testStream() {
+    var socket = io();
+    var stream = ss.createStream();
+    // ss(socket).emit('test', stream);
+    // stream.write('testomg2');
+    ss(socket).emit('test', 'testomg');
+}

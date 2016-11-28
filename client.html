@@ -1,51 +1,145 @@
 <!doctype html>
-<html>
+<!--
+    Tangram: real-time WebGL rendering for OpenStreetMap
+
+    http://github.com/tangrams/tangram
+    http://mapzen.com
+-->
+<html lang="en-us">
   <head>
-    <title>Socket.IO chat</title>
+    <title>kinkade client</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
     <style>
+        body {
+            margin: 0px;
+            border: 0px;
+            padding: 0px;
+        }
+
+        #map {
+            background: rgba(0, 0, 0, 0);
+            height: 100%;
+            width: 100%;
+            position: absolute;
+        }
+        #kinkade {
+            font-size: 20px;
+            position: absolute;
+            right: 6px;
+            z-index: 1000;
+            background: white;
+            padding: 4px 0 4px 4px;
+            margin: 0;
+            width: 256px;
+            height: 256px;
+        }
+        #kcanvas {
+            z-index: 2000;
+            margin: 0;
+            padding: 0;
+            width: 256px;
+            height: 256px;
+        }
+        #reticle {
+            position: absolute;
+            pointer-events: none;
+            width: 256px;
+            height: 256px;
+            left: 5.5px;
+            top: 5.33px;
+            opacity: 0.2;
+        }
+        #saveButton {
+            font-size: 30px;
+            float: right;
+            clear: none;
+        }
+        #picker {
+            width: 250px;
+            font-size: 15px;
+        }
+        .kbutton {
+            font-size: 15px;
+            float: left;
+            /*clear: none;*/
+        }
+        .bigbutton {
+            font-size: 400px;
+            float: left;
+            /*clear: none;*/
+        }
     </style>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
   </head>
+
   <body>
+    <div id="kinkade">
+        <img id="reticle" src="reticle.png">
+        <canvas id="kcanvas" height="256" width="256" style="border:1px #000 solid;" onmouseover="hidePicker()"></canvas>
+        <script src="lib/jscolor.min.js"></script>
+        <br>
+        <input id="picker" class="jscolor" value="ab5127" onmouseover="this.jscolor.show();" onchange="updateColor(this.value);"><br>
+        <script>
+        // http://www.paulirish.com/2009/random-hex-color-code-snippets/
+        var n = Math.floor(Math.random()*16777215).toString(16);
+        // http://stackoverflow.com/a/10073788/738675
+        n = n.length >= 6 ? n : new Array(6 - n.length + 1).join('0') + n;
+        document.getElementById("picker").value = n;
+        function hidePicker() {
+            if (typeof document.getElementById('picker').jscolor != 'undefined') document.getElementById('picker').jscolor.hide();
+        }
+        </script>
+        <button class="kbutton" onclick="exportCanvas()">SAVE</button>
+        <button class="kbutton" onclick="clearCanvas();updateMap();">RESET</button>
 
-    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    </div>
 
-    <canvas id="canvas">
+    <!-- make canvas.toBlob work in Safari -->
+    <script type="text/javascript" src="lib/Blob.js"></script>
+    <script type="text/javascript" src="lib/canvas-toBlob.js"></script>
+    <script src="/lib/socket.io-stream.js"></script>
+    <!-- End of 3rd party libraries -->
 
-    <script>
+    <!-- Demo module -->
+    <script src="kinkade.js"></script>
 
-      var socket = io();
-      var canvas = document.getElementById('canvas');
-      var ctx = canvas.getContext('2d');
-
-      socket.on('blatout', function(data){
-          console.log('data:', data)
-
-          // var i = new ImageData(new Uint8ClampedArray(data.buffer),256,256);
-          var i = new ImageData(new Uint8ClampedArray(data.buffer),256,256);
-          ctx.putImageData(i,0,0);
-          // console.log(blob);
-          // var uint8Arr = new Uint8Array(blob);
-          // var binary = '';
-          // for (var i = 0; i < uint8Arr.length; i++) {
-          //     binary += String.fromCharCode(uint8Arr[i]);
-          // }
-          // var base64String = window.btoa(binary);
-
-          // var img = new Image();
-          // img.onload = function() {
-          //     canvas.width = img.width;
-          //     canvas.height = img.height;
-          //     var x = 0, y = 0;
-          //     ctx.drawImage(data, x, y);
-          // }
-          // img.src = 'data:image/png;base64,' + base64String;
-      });
+<script>
 
 
-    </script>
+  var socket = io();
+
+  socket.on('image', function(data) {
+      // console.log(data.buffer);
+      var uint8Arr = new Uint8Array(data.buffer);
+      var binary = '';
+      for (var i = 0; i < uint8Arr.length; i++) {
+          binary += String.fromCharCode(uint8Arr[i]);
+      }
+      var base64String = window.btoa(binary);
+
+      var img = new Image();
+      img.onload = function() {
+          var canvas = document.createElement('canvas');
+          canvas.width = img.width/2;
+          canvas.height = img.height/2;
+          document.body.appendChild(canvas);
+          var ctx = canvas.getContext('2d');
+          var x = 0, y = 0;
+          ctx.drawImage(this, x, y, canvas.width, canvas.height);
+      }
+      img.src = 'data:image/png;base64,' + base64String;
+  });
+
+</script>
+
+        <button class="bigbutton" onclick="testStream();">TEST</button>
 
   </body>
 </html>

@@ -1,0 +1,31 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf470
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww12620\viewh13700\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\b\fs30 \cf0 socket.demo
+\b0 \
+\
+Got socket.io moving blobs back and forth, but json encoding and decoding them back and forth is super-slow. Think I need to usesocket.io-stream\
+\
+https://github.com/nkzawa/socket.io-stream\
+"This is the module for bidirectional binary data transfer with Stream API through Socket.IO."\
+\
+Tasks:\
+\
+Get client receiving stream from server\
+Get server receiving stream from client\
+Get server receiving stream from client 1 and piping it to client 2\
+\
+1. Get client receiving stream from server\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 How to stream something form the server?\
+\
+{\field{\*\fldinst{HYPERLINK "https://github.com/substack/stream-handbook"}}{\fldrslt https://github.com/substack/stream-handbook}}\
+\
+Do I need to make a new kind of Stream object? What kinds of stream objects are there? What characteristics of a stream object differentiate it from any other kinds of objects?\
+\
+Node.js streams work on strings and Buffer objects.\
+\
+}

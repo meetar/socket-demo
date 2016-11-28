@@ -19,16 +19,17 @@ io.on('connection', function(socket){
     });
 
   ss(socket).on('blatin', function(stream, data) {
-  	console.log('blat stream received');
+  	// console.log('blat stream received:', stream);
+  	console.log('blat stream received:');
 
  	for(var i in io.sockets.connected) {
       //don't send the stream back to the initiator
       if (io.sockets.connected[i].id != socket.id)
       {
         var socketTo = io.sockets.connected[i]
-        var outgoingstream = ss.createStream();
+        // var outgoingstream = ss.createStream();
         // ss(socketTo).emit('blatout', 'test');
-        socketTo.send('blatout', 'test');
+        socketTo.send('blatout', stream);
         // ss(socketTo).emit('file', outgoingstream, data);
         // stream.pipe(outgoingstream);
       }
@@ -39,7 +40,7 @@ io.on('connection', function(socket){
   });
 
   ss(socket).on('test', function(stream, data) {
-  	console.log('test stream received:', stream);
+  	console.log('test stream received:');
 
     // ss(socket).emit('blatout', stream);
 
@@ -47,7 +48,7 @@ io.on('connection', function(socket){
       //don't send the stream back to the initiator
       if (io.sockets.connected[i].id != socket.id)
       {
-      	console.log(io.sockets.connected[i].id +'!='+ socket.id);
+      	// console.log(io.sockets.connected[i].id +'!='+ socket.id);
         var socketTo = io.sockets.connected[i]
         // socketTo.send('blatout', 'test');
         socketTo.emit('blatout', 'test'); // < this works… but not sure it's what i want

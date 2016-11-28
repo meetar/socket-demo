@@ -129,7 +129,7 @@ function sendBlat() {
     // Array.prototype.slice.call((new Uint8Array([0,1,2,3])))
     // imgArray = Array.prototype.slice.call((new Uint8Array(imgArray)));
     // imgArray = new Uint8Array(imgArray);
-    imgArray = new ArrayBuffer(imgArray);
+    imgArray = new ss.Buffer(imgArray);
 
 
 

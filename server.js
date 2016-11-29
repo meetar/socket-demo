@@ -16,6 +16,8 @@ io.setMaxListeners(15);
 app.setMaxListeners(15);
 http.setMaxListeners(15);
 
+var remote;
+
 io.on('connection', function(socket){
 	socket.setMaxListeners(20);
     // cat = proof of life
@@ -23,20 +25,17 @@ io.on('connection', function(socket){
         socket.emit('image', { buffer: buffer });
     });
 
-  ss(socket).on('blatin', function(stream, data) {
-  	console.log('blat stream received:');
+    socket.on('remote-connect', function() {
+    	console.log('remote-connect; setting socket')
+    	remote = socket;
+    });
 
- 	for(var i in io.sockets.connected) {
-        //don't send the stream back to the initiator
-        if (io.sockets.connected[i].id != socket.id) {
-	        var socketTo = io.sockets.connected[i];
-	        // socketTo.emit('blatout', 'test'); // < this works
-	        // socketTo.emit('blatout', stream); // < this works too - i got a message from the client to the remote
-	        var outgoingstream = ss.createStream();
-	        ss(socketTo).emit('blatout', outgoingstream);
-	        stream.pipe(outgoingstream);
-	    }
-    }
+  	ss(socket).on('blatin', function(stream, data) {
+	  	// console.log('blat stream received:');
+
+	    var outgoingstream = ss.createStream();
+	    ss(remote).emit('blatout', outgoingstream);
+	    stream.pipe(outgoingstream);
 
   });
 

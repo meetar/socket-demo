@@ -12,10 +12,6 @@ app.get(/.*/, function(req, res){
   res.sendFile(__dirname + req.url);
 });
 
-io.setMaxListeners(15);
-app.setMaxListeners(15);
-http.setMaxListeners(15);
-
 var remote;
 
 io.on('connection', function(socket){

@@ -86,6 +86,7 @@ canvas.addEventListener("mousemove", function(e){
         lastX = x;
         lastY = y;
         sendBlat();
+        // throttle(sendBlat, 50);
         // scene.loadTextures();
     };
 });
@@ -102,48 +103,24 @@ function clearCanvas() {
 clearCanvas();
 var lastCanvas = {url: null};
 
-// function updateMap(){
-//     scene.loadTextures();
-// }
-
-window.onload = function() {
-    // init first undo
-    saveCanvas();
+function throttle(fn, wait) {
+  var time = Date.now();
+  return function() {
+    if ((time + wait - Date.now()) < 0) {
+      fn();
+      time = Date.now();
+    }
+  }
 }
 
-function exportCanvas() {
-    window.open(
-      lastCanvas.url,
-      '_blank' // <- This is what makes it open in a new window.
-    );
-}
-
+var socket = io();
+var stream = ss.createStream();
+var imageBuffer = new ss.Buffer(256*256*4);
 function sendBlat() {
-    var socket = io();
-    // console.log('blatting');
-
-    // var imgArray = ctx.getImageData(0,0,canvas.width,canvas.height).data;
-
-    // imgArray = imgArray.slice(0, 10);
-
-    // Array.prototype.slice.call((new Uint8Array([0,1,2,3])))
-    // imgArray = Array.prototype.slice.call((new Uint8Array(imgArray)));
-    // imgArray = new Uint8Array(imgArray);
-    // imgArray = new ss.Buffer(imgArray);
-
-    var stream = ss.createStream();
- 
-    // upload a file to the server. 
-    // stream.write(imgArray);
-    stream.write(new ss.Buffer(ctx.getImageData(0,0,canvas.width,canvas.height).data));
+    console.log('blatting'); 
+    // send buffer to the server
+    imageBuffer.set(ctx.getImageData(0,0,canvas.width,canvas.height).data);
+    stream.write(imageBuffer);
     ss(socket).emit('blatin', stream);
-
     return false;
-}
-
-function testStream() {
-    var socket = io();
-    var stream = ss.createStream();
-    stream.write(new ss.Buffer([1,2,3,4,5]));
-    ss(socket).emit('test', stream);
 }

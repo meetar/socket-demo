@@ -26,10 +26,11 @@ io.on('connection', function(socket){
     	remote = socket;
     });
 
+    var outgoingstream = ss.createStream();
+
   	ss(socket).on('blatin', function(stream, data) {
 	  	// console.log('blat stream received:');
 
-	    var outgoingstream = ss.createStream();
 	    ss(remote).emit('blatout', outgoingstream);
 	    stream.pipe(outgoingstream);
 

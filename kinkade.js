@@ -102,9 +102,9 @@ function clearCanvas() {
 clearCanvas();
 var lastCanvas = {url: null};
 
-function updateMap(){
-    scene.loadTextures();
-}
+// function updateMap(){
+//     scene.loadTextures();
+// }
 
 window.onload = function() {
     // init first undo
@@ -120,21 +120,22 @@ function exportCanvas() {
 
 function sendBlat() {
     var socket = io();
-    console.log('blatting');
+    // console.log('blatting');
 
-    var imgArray = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+    // var imgArray = ctx.getImageData(0,0,canvas.width,canvas.height).data;
 
     // imgArray = imgArray.slice(0, 10);
 
     // Array.prototype.slice.call((new Uint8Array([0,1,2,3])))
     // imgArray = Array.prototype.slice.call((new Uint8Array(imgArray)));
     // imgArray = new Uint8Array(imgArray);
-    imgArray = new ss.Buffer(imgArray);
+    // imgArray = new ss.Buffer(imgArray);
 
     var stream = ss.createStream();
  
     // upload a file to the server. 
-    stream.write(imgArray);
+    // stream.write(imgArray);
+    stream.write(new ss.Buffer(ctx.getImageData(0,0,canvas.width,canvas.height).data));
     ss(socket).emit('blatin', stream);
 
     return false;

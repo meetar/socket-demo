@@ -13,7 +13,7 @@
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="/lib/socket.io-stream.js"></script>
 
-    <canvas id="canvas">
+    <canvas id="canvas" width="250px" height="250px">
 
     <script>
 
@@ -21,19 +21,12 @@
       var canvas = document.getElementById('canvas');
       var ctx = canvas.getContext('2d');
 
-      // var stream = ss.createStream();
-
-      // socket.on('blatout', function(err, data){
-      //     console.log('data:', data) // this works
-      // });
-
+      var imageData = ctx.createImageData(256, 256);
       ss(socket).on('blatout', function(stream, data){
-          // console.log('blatout received');
           stream.on('data', function(chunk) {
-            // console.log('chunk:', chunk);
 
-            var i = new ImageData(new Uint8ClampedArray(chunk),256,256);
-            ctx.putImageData(i,0,0);
+            imageData.data.set(new Uint8ClampedArray(chunk));
+            ctx.putImageData(imageData,0,0);
 
         });
       });

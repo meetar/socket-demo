@@ -124,7 +124,6 @@ function sendBlat() {
     // console.log(ctx.getImageData(0,0,canvas.width,canvas.height).data);
     var imgArray = ctx.getImageData(0,0,canvas.width,canvas.height).data;
     imgArray = imgArray.slice(0, 10);
-    // console.log(imgArray);
 
     // Array.prototype.slice.call((new Uint8Array([0,1,2,3])))
     // imgArray = Array.prototype.slice.call((new Uint8Array(imgArray)));
@@ -137,8 +136,8 @@ function sendBlat() {
     var stream = ss.createStream();
  
     // upload a file to the server. 
-    ss(socket).emit('blatin', stream);
     stream.write(imgArray);
+    ss(socket).emit('blatin', stream);
     // ss.createBlobReadStream(file).pipe(stream);
 
 
@@ -150,8 +149,12 @@ function sendBlat() {
 function testStream() {
     var socket = io();
     var stream = ss.createStream();
+    // stream.write(imgArray);
+    // stream.write([1, 2, 3]);
+    // stream.write([1, 2, 3]);
+    stream.write(new ss.Buffer([1,2,3,4,5]));
     // ss(socket).emit('test', stream);
     // stream.write('testomg2');
-    ss(socket).emit('test', 'testomg');
-    socket.emit('testout', 'testomg2');
+    // ss(socket).emit('test', 'testomg');
+    ss(socket).emit('test', stream);
 }

@@ -23,17 +23,20 @@
 
       // var stream = ss.createStream();
 
-
+      var outstream;
       // socket.on('blatout', function(){
-      socket.on('blatout', function(data, stream){
-        console.log('blatout received');
+      socket.on('blatout', function(stream, data){
+        console.log('\nblatout received');
       // socket.on('blatout', function(data, stream){
-          console.log('data:', data)
           console.log('stream:', stream)
+          console.log('stream:', stream)
+          outstream = stream;
+          console.log('stream.writeBuffer:', stream.writeBuffer);
+          console.log('data:', data)
 
           // var i = new ImageData(new Uint8ClampedArray(data.buffer),256,256);
-          var i = new ImageData(new Uint8ClampedArray(data.buffer),256,256);
-          ctx.putImageData(i,0,0);
+          // var i = new ImageData(new Uint8ClampedArray(data.buffer),256,256);
+          // ctx.putImageData(i,0,0);
           // console.log(blob);
           // var uint8Arr = new Uint8Array(blob);
           // var binary = '';
@@ -52,8 +55,11 @@
           // img.src = 'data:image/png;base64,' + base64String;
       });
 
-      socket.on('testout', function(data){
-          console.log(data);
+      socket.on('testout', function(stream, data){
+          console.log('testout received')
+          console.log('stream:', stream.n);
+          console.log('data', data);
+          stream.pipe(console.log);
       });
 
       console.log('awake')

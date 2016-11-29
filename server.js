@@ -21,19 +21,26 @@ io.on('connection', function(socket){
   ss(socket).on('blatin', function(stream, data) {
   	// console.log('blat stream received:', stream);
   	console.log('blat stream received:');
+  	console.log('stream:', stream);
+  	console.log('data:', data);
 
  	for(var i in io.sockets.connected) {
-      //don't send the stream back to the initiator
-      if (io.sockets.connected[i].id != socket.id)
-      {
-        var socketTo = io.sockets.connected[i]
-        // var outgoingstream = ss.createStream();
-        // ss(socketTo).emit('blatout', 'test');
-        // socketTo.send('blatout', stream);
-        socketTo.send('blatout', data);
-        // ss(socketTo).emit('file', outgoingstream, data);
-        // stream.pipe(outgoingstream);
-      }
+        //don't send the stream back to the initiator
+        if (io.sockets.connected[i].id != socket.id) {
+            var socketTo = io.sockets.connected[i]
+            // var outgoingstream = ss.createStream();
+            // ss(socketTo).emit('blatout', 'test');
+            // socketTo.send('blatout', stream);
+            // socketTo.send('blatout', data);
+            // ss(socketTo).emit('file', outgoingstream, data);
+            // stream.pipe(outgoingstream);
+            var outgoingstream = ss.createStream();
+            // outgoingstream.write(new ss.Buffer([0, 1, 2]));
+            // socketTo.emit('blatout', outgoingstream, data);
+            // socketTo.emit('blatout', outgoingstream, new ss.Buffer([0, 1, 2]));
+            // socketTo.emit('blatout', outgoingstream, new ss.Buffer(data));
+            socketTo.emit('blatout', outgoingstream, new ss.Buffer(stream));
+        }
     }
 
 	// stream.pipe(fs.createWriteStream('foo.txt'));
@@ -42,9 +49,8 @@ io.on('connection', function(socket){
 
   ss(socket).on('test', function(stream, data) {
   	console.log('test stream received:');
-  	console.log('stream:', JSON.stringify(stream));
-  	console.log('data:', data);
 
+  	// console.log(stream);
     // ss(socket).emit('blatout', stream);
 
  	for(var i in io.sockets.connected) {
@@ -54,15 +60,18 @@ io.on('connection', function(socket){
       	// console.log(io.sockets.connected[i].id +'!='+ socket.id);
         var socketTo = io.sockets.connected[i]
         // socketTo.send('blatout', 'test');
-        socketTo.emit('blatout', 'test'); // < this works… but not sure it's what i want
-        socketTo.emit('blatout', data); // < this works… but not sure it's what i want
+        // socketTo.emit('blatout', 'test'); // < this works… but not sure it's what i want
+        // socketTo.emit('blatout', stream); // < this works… but not sure it's what i want
         // socketTo.emit('blatout', stream); // < this works too! i got a message from the client to the remote!!
         // stream.pipe(socketTo);
         // ss(socket).emit('blatout', stream);
 
-        // var outgoingstream = ss.createStream();
+        var outgoingstream = ss.createStream();
         // // stream.pipe(outgoingstream);
         // ss(socketTo).emit('testout', stream);
+        // ss(socketTo).emit('testout', outgoingstream);
+        // socketTo.emit('testout', outgoingstream, 'testout!'); // works!!
+        socketTo.emit('testout', outgoingstream, data); // works!!
 
       }
     }

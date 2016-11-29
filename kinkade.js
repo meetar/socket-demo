@@ -145,16 +145,23 @@ function sendBlat() {
     return false;
 }
 
+// function testStream() {
+//     var socket = io();
+//     var stream = ss.createStream();
+//     // stream.write(imgArray);
+//     // stream.write([1, 2, 3]);
+//     // stream.write([1, 2, 3]);
+//     stream.write(new ss.Buffer([1,2,3,4,5]));
+//     // ss(socket).emit('test', stream);
+//     // stream.write('testomg2');
+//     // ss(socket).emit('test', 'testomg');
+//     ss(socket).emit('test', stream);
+//     // ss(socket).emit('test', new ss.Buffer([1,2,3,4,5]));
+// }
 
 function testStream() {
     var socket = io();
     var stream = ss.createStream();
-    // stream.write(imgArray);
-    // stream.write([1, 2, 3]);
-    // stream.write([1, 2, 3]);
     stream.write(new ss.Buffer([1,2,3,4,5]));
-    // ss(socket).emit('test', stream);
-    // stream.write('testomg2');
-    // ss(socket).emit('test', 'testomg');
     ss(socket).emit('test', stream);
 }

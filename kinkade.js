@@ -153,4 +153,5 @@ function testStream() {
     // ss(socket).emit('test', stream);
     // stream.write('testomg2');
     ss(socket).emit('test', 'testomg');
+    socket.emit('testout', 'testomg2');
 }

@@ -21,11 +21,12 @@
       var canvas = document.getElementById('canvas');
       var ctx = canvas.getContext('2d');
 
-      var stream = ss.createStream();
+      // var stream = ss.createStream();
 
 
       // socket.on('blatout', function(){
-      socket.on('blatout', function(err, data){
+      socket.on('blatout', function(data, stream){
+        console.log('blatout received');
       // socket.on('blatout', function(data, stream){
           console.log('data:', data)
           console.log('stream:', stream)

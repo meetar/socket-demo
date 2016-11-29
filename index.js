@@ -14,7 +14,7 @@ app.get(/.*/, function(req, res){
 
 io.on('connection', function(socket){
     // garfield = proof of life
-    fs.readFile('g.jpg', function(err, buffer){
+    fs.readFile('g.png', function(err, buffer){
         socket.emit('image', { buffer: buffer });
     });
 
@@ -29,7 +29,8 @@ io.on('connection', function(socket){
         var socketTo = io.sockets.connected[i]
         // var outgoingstream = ss.createStream();
         // ss(socketTo).emit('blatout', 'test');
-        socketTo.send('blatout', stream);
+        // socketTo.send('blatout', stream);
+        socketTo.send('blatout', data);
         // ss(socketTo).emit('file', outgoingstream, data);
         // stream.pipe(outgoingstream);
       }
@@ -51,7 +52,8 @@ io.on('connection', function(socket){
       	// console.log(io.sockets.connected[i].id +'!='+ socket.id);
         var socketTo = io.sockets.connected[i]
         // socketTo.send('blatout', 'test');
-        socketTo.emit('blatout', 'test'); // < this works… but not sure it's what i want
+        // socketTo.emit('blatout', 'test'); // < this works… but not sure it's what i want
+        socketTo.emit('blatout', stream); // < this works too! i got a message from the client to the remote!!
         // ss(socket).emit('blatout', stream);
 
         // var outgoingstream = ss.createStream();

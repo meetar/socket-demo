@@ -20,32 +20,21 @@ io.on('connection', function(socket){
 
   ss(socket).on('blatin', function(stream, data) {
   	console.log('blat stream received:');
-  	console.log('stream:', stream);
-  	console.log('data:', data);
+  	// console.log('stream:', stream);
+  	// console.log('data:', data);
 
  	for(var i in io.sockets.connected) {
         //don't send the stream back to the initiator
         if (io.sockets.connected[i].id != socket.id) {
-            var socketTo = io.sockets.connected[i]
-            // var outgoingstream = ss.createStream();
-            // ss(socketTo).emit('blatout', 'test');
-            // socketTo.send('blatout', stream);
-            // socketTo.send('blatout', data);
-            // ss(socketTo).emit('file', outgoingstream, data);
-            // stream.pipe(outgoingstream);
-            var outgoingstream = ss.createStream();
-            // outgoingstream.write(new ss.Buffer([0, 1, 2]));
-            // socketTo.emit('blatout', outgoingstream, data);
-            // socketTo.emit('blatout', outgoingstream, new ss.Buffer([0, 1, 2]));
-            // socketTo.emit('blatout', outgoingstream, new ss.Buffer(data));
-            // ss(socketTo).emit('blatout', outgoingstream, new ss.Buffer(stream));
-            ss(socketTo).emit('blatout', outgoingstream);
-            stream.pipe(outgoingstream);
-        }
+	        var socketTo = io.sockets.connected[i];
+	        // socketTo.emit('blatout', 'test'); // < this works
+	        // socketTo.emit('blatout', stream); // < this works too - i got a message from the client to the remote
+	        var outgoingstream = ss.createStream();
+	        ss(socketTo).emit('blatout', outgoingstream);
+	        stream.pipe(outgoingstream);
+	    }
     }
 
-	// stream.pipe(fs.createWriteStream('foo.txt'));
-  	// socket.pipe(socket.broadcast.emit('blatout', stream));
   });
 
   ss(socket).on('test', function(stream, data) {

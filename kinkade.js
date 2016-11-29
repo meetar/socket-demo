@@ -121,43 +121,24 @@ function exportCanvas() {
 function sendBlat() {
     var socket = io();
     console.log('blatting');
-    // console.log(ctx.getImageData(0,0,canvas.width,canvas.height).data);
+
     var imgArray = ctx.getImageData(0,0,canvas.width,canvas.height).data;
-    imgArray = imgArray.slice(0, 10);
+
+    // imgArray = imgArray.slice(0, 10);
 
     // Array.prototype.slice.call((new Uint8Array([0,1,2,3])))
     // imgArray = Array.prototype.slice.call((new Uint8Array(imgArray)));
     // imgArray = new Uint8Array(imgArray);
     imgArray = new ss.Buffer(imgArray);
 
-
-
-    // var file = e.target.files[0];
     var stream = ss.createStream();
  
     // upload a file to the server. 
     stream.write(imgArray);
     ss(socket).emit('blatin', stream);
-    // ss.createBlobReadStream(file).pipe(stream);
 
-
-    // socket.emit('blatin', imgArray);
     return false;
 }
-
-// function testStream() {
-//     var socket = io();
-//     var stream = ss.createStream();
-//     // stream.write(imgArray);
-//     // stream.write([1, 2, 3]);
-//     // stream.write([1, 2, 3]);
-//     stream.write(new ss.Buffer([1,2,3,4,5]));
-//     // ss(socket).emit('test', stream);
-//     // stream.write('testomg2');
-//     // ss(socket).emit('test', 'testomg');
-//     ss(socket).emit('test', stream);
-//     // ss(socket).emit('test', new ss.Buffer([1,2,3,4,5]));
-// }
 
 function testStream() {
     var socket = io();

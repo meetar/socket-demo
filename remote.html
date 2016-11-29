@@ -28,45 +28,16 @@
       // });
 
       ss(socket).on('blatout', function(stream, data){
-          console.log('blatout received');
-        //   console.log('stream:', stream);
-        //   console.log('data:', data);
+          // console.log('blatout received');
           stream.on('data', function(chunk) {
-            console.log('chunk:', chunk);
-            // size += chunk.length;
-            // var percent = Math.floor((size / data.size) * 100);
-            // updateProgress(percent);
+            // console.log('chunk:', chunk);
+
+            var i = new ImageData(new Uint8ClampedArray(chunk),256,256);
+            ctx.putImageData(i,0,0);
+
         });
       });
 
-      // socket.on('blatout', function(stream, data){
-      //   console.log('\nblatout received');
-      // // socket.on('blatout', function(data, stream){
-      //     console.log('stream:', stream)
-      //     outstream = stream;
-      //     console.log('stream.writeBuffer:', stream.writeBuffer);
-      //     console.log('data:', data)
-
-      //     // var i = new ImageData(new Uint8ClampedArray(data.buffer),256,256);
-      //     // var i = new ImageData(new Uint8ClampedArray(data.buffer),256,256);
-      //     // ctx.putImageData(i,0,0);
-      //     // console.log(blob);
-      //     // var uint8Arr = new Uint8Array(blob);
-      //     // var binary = '';
-      //     // for (var i = 0; i < uint8Arr.length; i++) {
-      //     //     binary += String.fromCharCode(uint8Arr[i]);
-      //     // }
-      //     // var base64String = window.btoa(binary);
-
-      //     // var img = new Image();
-      //     // img.onload = function() {
-      //     //     canvas.width = img.width;
-      //     //     canvas.height = img.height;
-      //     //     var x = 0, y = 0;
-      //     //     ctx.drawImage(data, x, y);
-      //     // }
-      //     // img.src = 'data:image/png;base64,' + base64String;
-      // });
 
       socket.on('testout', function(err, data){
           console.log('stream:', stream);

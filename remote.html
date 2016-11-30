@@ -32,13 +32,6 @@
         });
       });
 
-
-      socket.on('testout', function(err, data){
-          console.log('stream:', stream);
-          console.log('data', data);
-          stream.pipe(console.log);
-      });
-
       console.log('awake')
 
       socket.emit('remote-connect');

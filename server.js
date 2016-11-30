@@ -27,11 +27,7 @@ io.on('connection', function(socket){
     });
 
     var outgoingstream = ss.createStream();
-
-    if (typeof remote != 'undefined') {
-      ss(remote).emit('blatout', outgoingstream);
-    }
-
+    ss(remote).emit('blatout', outgoingstream);
   	ss(socket).on('blatin', function(stream, data) {
       stream.pipe(outgoingstream);
     });

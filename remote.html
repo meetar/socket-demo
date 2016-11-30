@@ -24,7 +24,7 @@
       var img = new Image();
       ss(socket).on('blatout', function(stream, data){
           stream.on('data', function(chunk) {
-            console.log(chunk.length)
+            // console.log(chunk.length)
 
             img.src = chunk;
             ctx.drawImage(img,0,0);

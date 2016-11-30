@@ -26,14 +26,16 @@ io.on('connection', function(socket){
     	remote = socket;
     });
 
-    // var outgoingstream = ss.createStream();
-    var outgoingstream = ss.createBlobReadStream();
+    var outgoingstream = ss.createStream();
+    // var outgoingstream = ss.createBlobReadStream();
 
   	ss(socket).on('blatin', function(stream, data) {
 	  	console.log('blat stream received:');
 
 	    ss(remote).emit('blatout', outgoingstream);
-	    stream.pipe(outgoingstream);
+      if (typeof remote != 'undefined') {
+	      stream.pipe(outgoingstream);
+      }
 
   });
 

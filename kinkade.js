@@ -1,6 +1,57 @@
 /*jslint browser: true*/
 /*global Tangram, gui */
 
+map = (function () {
+    'use strict';
+
+    var map_start_location = [35.3470, 138.7379, 12.175]; // SF
+
+    /*** URL parsing ***/
+
+    // leaflet-style URL hash pattern:
+    // #[zoom],[lat],[lng]
+    var url_hash = window.location.hash.slice(1, window.location.hash.length).split('/');
+
+    if (url_hash.length == 3) {
+        map_start_location = [url_hash[1],url_hash[2], url_hash[0]];
+        // convert from strings
+        map_start_location = map_start_location.map(Number);
+    }
+
+    /*** Map ***/
+
+    var map = L.map('map',
+        {"keyboardZoomOffset" : .05,
+        scrollWheelZoom: false}
+    );
+
+    var layer = Tangram.leafletLayer({
+        scene: 'scene.yaml',
+        attribution: '<a href="https://mapzen.com/tangram" target="_blank">Tangram</a> | &copy; OSM contributors | <a href="https://mapzen.com/" target="_blank">Mapzen</a>'
+    });
+
+    window.layer = layer;
+    var scene = layer.scene;
+    window.scene = scene;
+
+    // setView expects format ([lat, long], zoom)
+    map.setView(map_start_location.slice(0, 3), map_start_location[2]);
+
+    var hash = new L.Hash(map);
+
+    /***** Render loop *****/
+
+    window.addEventListener('load', function () {
+        // Scene initialized
+        layer.on('init', function() {
+        });
+        layer.addTo(map);
+    });
+
+    return map;
+
+}());
+
 var canvas = document.getElementById('kcanvas');
 
 canvas.onselectstart = function(){ return false; };
@@ -57,7 +108,7 @@ canvas.addEventListener("mousedown", function(e){
 });
 canvas.addEventListener("mouseup", function(){
     drawing = false;
-    // scene.loadTextures();
+    scene.loadTextures();
     sendBlat();
     saveCanvas();
 });
@@ -87,7 +138,7 @@ canvas.addEventListener("mousemove", function(e){
         lastY = y;
         // sendBlat();
         throttle(sendBlat, 16);
-        // scene.loadTextures();
+        scene.loadTextures();
     };
 });
 
@@ -102,7 +153,7 @@ function clearCanvas() {
 }
 clearCanvas();
 var lastCanvas = {url: null};
-  var time = Date.now();
+var time = Date.now();
 
 function throttle(fn, wait) {
     if ((Date.now() - time) > wait) {
@@ -111,27 +162,15 @@ function throttle(fn, wait) {
     }
 }
 
+// make connection to server
 var socket = io();
 var stream = ss.createStream();
 ss(socket).emit('blatin', stream);
-// var imageBuffer = new ss.Buffer(256*256*4);
+
 function sendBlat() {
     console.log('blatting'); 
-    // send buffer to the server
+    // convert canvas to dataurl and send to the server
     var dataurl = canvas.toDataURL();
-    // canvas.toBlob(function(blob) {
-    // var blobstream = new ss.createBlobReadStream(blob);
-
-
-
     stream.write(new ss.Buffer(dataurl));
-        // stream.write(new ss.Blob(blob));
-        // ss(socket).emit('blatin', stream);
-
-
-
-    // imageBuffer.set(ctx.getImageData(0,0,canvas.width,canvas.height).data);
-    // stream.write(imageBuffer);
-    // ss(socket).emit('blatin', stream);
     return false;
 }

@@ -148,6 +148,26 @@
         img.src = 'data:image/png;base64,' + base64String;
     });
 
+    var socket = io();
+    var canvas = document.getElementById('kcanvas');
+    var ctx = canvas.getContext('2d');
+
+    var img = new Image();
+    ss(socket).on('blatout', function(stream, data){
+        stream.on('data', function(chunk) {
+          // console.log(chunk.length)
+
+          img.src = chunk;
+          ctx.drawImage(img,0,0);
+          scene.loadTextures();
+        });
+    });
+
+    console.log('awake')
+
+    socket.emit('remote-connect');
+
+
   </script>
 
   </body>

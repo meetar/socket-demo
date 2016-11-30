@@ -120,14 +120,16 @@ ss(socket).emit('file', stream);
 function sendBlat() {
     console.log('blatting'); 
     // send buffer to the server
-    canvas.toBlob(function(blob) {
+    var dataurl = canvas.toDataURL();
+    // canvas.toBlob(function(blob) {
     var blobstream = new ss.createBlobReadStream(blob);
 
+
+        dataurl
         blobstream.pipe(stream);
 
         // stream.write(new ss.Blob(blob));
         // ss(socket).emit('blatin', stream);
-    });
 
 
 

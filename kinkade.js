@@ -85,8 +85,8 @@ canvas.addEventListener("mousemove", function(e){
         }
         lastX = x;
         lastY = y;
-        sendBlat();
-        // throttle(sendBlat, 50);
+        // sendBlat();
+        throttle(sendBlat, 50);
         // scene.loadTextures();
     };
 });
@@ -103,23 +103,23 @@ function clearCanvas() {
 clearCanvas();
 var lastCanvas = {url: null};
 
+var time = Date.now();
 function throttle(fn, wait) {
-  var time = Date.now();
-  return function() {
-    if ((time + wait - Date.now()) < 0) {
+    if ((Date.now() - time) > wait) {
       fn();
       time = Date.now();
     }
-  }
 }
 
+function tick() {
+    console.log('time');
+}
 var socket = io();
 var stream = ss.createStream();
 var imageBuffer = new ss.Buffer(256*256*4);
 ss(socket).emit('blatin', stream);
+
 function sendBlat() {
-    // console.log('blatting'); 
-    // send buffer to the server
     imageBuffer.set(ctx.getImageData(0,0,canvas.width,canvas.height).data);
     stream.write(imageBuffer);
     return false;

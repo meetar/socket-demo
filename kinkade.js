@@ -116,11 +116,11 @@ function throttle(fn, wait) {
 var socket = io();
 var stream = ss.createStream();
 var imageBuffer = new ss.Buffer(256*256*4);
+ss(socket).emit('blatin', stream);
 function sendBlat() {
-    console.log('blatting'); 
+    // console.log('blatting'); 
     // send buffer to the server
     imageBuffer.set(ctx.getImageData(0,0,canvas.width,canvas.height).data);
     stream.write(imageBuffer);
-    ss(socket).emit('blatin', stream);
     return false;
 }

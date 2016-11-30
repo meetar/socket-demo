@@ -115,12 +115,24 @@ function throttle(fn, wait) {
 
 var socket = io();
 var stream = ss.createStream();
-var imageBuffer = new ss.Buffer(256*256*4);
+ss(socket).emit('file', stream);
+// var imageBuffer = new ss.Buffer(256*256*4);
 function sendBlat() {
     console.log('blatting'); 
     // send buffer to the server
-    imageBuffer.set(ctx.getImageData(0,0,canvas.width,canvas.height).data);
-    stream.write(imageBuffer);
-    ss(socket).emit('blatin', stream);
+    canvas.toBlob(function(blob) {
+    var blobstream = new ss.createBlobReadStream(blob);
+
+        blobstream.pipe(stream);
+
+        // stream.write(new ss.Blob(blob));
+        // ss(socket).emit('blatin', stream);
+    });
+
+
+
+    // imageBuffer.set(ctx.getImageData(0,0,canvas.width,canvas.height).data);
+    // stream.write(imageBuffer);
+    // ss(socket).emit('blatin', stream);
     return false;
 }

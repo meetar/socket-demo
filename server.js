@@ -13,6 +13,7 @@ app.get(/.*/, function(req, res){
 });
 
 var remote;
+var piped = false;
 
 io.on('connection', function(socket){
 	socket.setMaxListeners(20);
@@ -27,14 +28,18 @@ io.on('connection', function(socket){
     });
 
     var outgoingstream = ss.createStream();
+
     // var outgoingstream = ss.createBlobReadStream();
 
   	ss(socket).on('blatin', function(stream, data) {
 	  	console.log('blat stream received:');
+      if (!piped) {
+        stream.pipe(outgoingstream);
+      }
 
-	    ss(remote).emit('blatout', outgoingstream);
       if (typeof remote != 'undefined') {
-	      stream.pipe(outgoingstream);
+
+        ss(remote).emit('blatout', outgoingstream);
       }
 
   });
